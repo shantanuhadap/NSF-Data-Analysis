@@ -1,0 +1,6 @@
+venv/
+SQLiteDatabaseBrowserPortable/
+__pycache__
+*.sqlite3
+*.csv
+settings.py

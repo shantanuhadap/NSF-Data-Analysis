@@ -1,0 +1,91 @@
+{% extends 'visuals/base.html' %}
+{% load static %}
+
+{% block title %}
+    Visuals
+    {% endblock %}
+
+    {% block javascript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    {% endblock %}
+    {% block breadcrumb %}
+    <li class="breadcrumb-item">{{ sym.symbol_name }} Visuals</a></li>
+    {% endblock %}
+
+    {% block content %}
+    <div class="container">
+        <canvas id="mychart" style="height:400px;width: content-box;"></canvas>
+      </div>
+   
+    <script>
+      var ctx = document.getElementById('mychart').getContext('2d'); //get the context (canvas)
+
+      var config = {              //configure the chart
+          type: 'line',
+          data: {
+              labels: {{ ddate | safe }},
+              datasets: [
+              {
+                  label: "Real",
+                  backgroundColor: 'rgba(255, 206, 86,  0.6)',
+                  borderColor: 'rgba(54, 162, 235, 1.0)',
+                  fill: '-1',  //no fill here
+                  data: {{ org | safe }}
+              },
+    {
+                  label: "Min",
+                  backgroundColor: 'rgba(255, 206, 86,  0.6)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  fill: false,  //no fill here
+                  data: {{ minpred | safe }}
+              },
+    
+    {
+                  label: "Predicted",
+                  backgroundColor: 'rgba(255, 206, 86,  0.6)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  fill: '-1',  //no fill here
+                  data: {{ predicted | safe }}
+              },
+              {
+                  label: "Max",
+                  backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  fill: '-1', //fill until previous dataset
+                  data: {{ maxpred | safe }}
+              }]
+          },
+          options: {
+              responsive:false,
+              maintainAspectRatio: false,
+              spanGaps: false,
+              elements: {
+                  line: {
+                      tension: 0.000001
+                  }
+              },
+              plugins: {
+                  filler: {
+                      propagate: false
+                  }
+              },
+              scales: {
+                  xAxes: [{
+                      ticks: {
+                          autoSkip: false
+                      }
+                  }],
+  yAxes: [{
+          ticks: {
+              //beginAtZero: true
+          }
+      }]
+              }
+          }
+      };
+      var chart = new Chart(ctx, config);
+  </script>
+  {% endblock %}
+    
+  
